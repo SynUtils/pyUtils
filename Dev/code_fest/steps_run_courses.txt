@@ -1,0 +1,5 @@
+Steps to run the scripts:
+1.	Install Python 3 & Selenium Library
+2.	Keep properties.txt, object_repo, and courses.py in the same directory
+3.	Change hard coded path (/Users/pavang/Documents/IDE Projects/workspace/py_poc/src/code_fest/propeties.txt or /Users/pavang/Documents/IDE Projects/workspace/py_poc/src/code_fest/object_repo.txt) to your current dir where you keep scripts.
+4.	Run through python3 courses.py

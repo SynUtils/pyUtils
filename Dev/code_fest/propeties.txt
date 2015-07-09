@@ -1,0 +1,5 @@
+URL=http://enterprise.demo.orangehrmlive.com/
+user_id=Admin
+password=admin
+title=AWS Training
+coordinator=Jacqueline White

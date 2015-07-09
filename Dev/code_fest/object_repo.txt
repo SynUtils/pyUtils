@@ -1,0 +1,15 @@
+user_id=txtUsername
+password=txtPassword
+login_button=btnLogin
+training_tab=html/body/div[1]/div[2]/ul/li[7]/a/b
+courses=html/body/div[1]/div[2]/ul/li[7]/ul/li[2]/a
+courses_table=resultTable
+add_course_button=btnAdd
+add_course_title=addCourse_title
+add_course_version_first=addCourse_versionFirst
+add_course_version_second=addCourse_versionSecond
+add_course_coordinator=addCourse_coordinator_empName
+add_course_submit=addCourse_subunit
+add_course_company=addCourse_company
+add_course_cost=addCourse_cost
+add_course_save_button=btnSave

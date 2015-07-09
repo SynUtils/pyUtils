@@ -1,0 +1,45 @@
+---
+- hosts: localubuntu
+  vars:
+    skip_flag: true
+  tasks:
+  # - fail: msg="skipping task"
+  - name: update APT package cache
+    sudo: yes
+    apt: update_cache=yes
+
+  - name: install apt packages
+    sudo: yes
+    apt: name={{ item }} state=absent force=yes
+    with_items:
+    - vim
+    - scons
+    - default-jdk
+    - default-jre
+    - gcc
+    - vim
+    - git-core
+    - ruby-full
+
+  - name: Creates directory
+    file: path=/home/synerzip/Projects/ansible state=directory
+
+  - name: Copy File
+    copy: src=/Users/pavang/.netrc dest=/home/synerzip/.netrc owner=synerzip group=synerzip mode=0644
+
+  - name: Clone git repo
+    git: repo=https://quickoffice-internal.googlesource.com/html-office dest=/home/synerzip/Projects/ansible/html-office
+
+  - name: "Download Google Chrome"
+    get_url: url=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb dest=/home/synerzip/Projects/ansible
+
+  - name: "install google chrome"
+    command: dpkg -i /home/synerzip/Projects/ansible/google-chrome-stable_current_amd64.deb
+    sudo: yes
+
+  - name: "Install pip module"
+    pip: name=beautifulsoup4 version=4.2.0
+    sudo: yes
+
+  # - shell: echo "Flag is disabled!"
+  #   when: not skip_flag

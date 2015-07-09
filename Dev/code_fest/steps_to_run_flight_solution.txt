@@ -1,0 +1,3 @@
+Steps to run the scripts:
+1.	Install Python 3 & Selenium Library
+2.	Run through python3 flight_solution.py

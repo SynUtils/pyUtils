@@ -1,0 +1,8 @@
+OUTPUT_CSV_FILES_DIR = /Users/pavang/Documents/tools/performance/temp/src_csv
+TARGET_PERFORMANCE_CSV_FILE = /Users/pavang/Documents/tools/performance/temp/performance.csv
+
+LOG_FILE_PATH = /Users/pavang/Documents/tools/performance/performance.log
+NO_OF_ITERATION = 1
+CSV_GENERATOR = /Users/pavang/Projects/git/html-office/crx/e2eTests/c2cTests/report/generateReport.py
+CSV_GENERATOR_ARGS = /Users/pavang/Documents/tools/performance/c2cprop.txt
+SOURCE_CSV_FILE_PATH = /Users/pavang/Projects/git/html-office/crx/e2eTests/c2cTests/report/profileData.csv

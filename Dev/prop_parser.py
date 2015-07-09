@@ -36,8 +36,7 @@ class Properties:
                 if line in ['\n', '\r\n']:
                     continue
                 key, value = line.strip().split(self.sep)
-                self._props[key] = value
-        
+                self._props[key.strip()] = value.strip()        
         return self._props
     
     def print_prop(self, print_sep = '='):
@@ -48,10 +47,13 @@ class Properties:
         for key, value in self._props.items():
             print(str(key) + print_sep + '   ' + str(value))
                 
-           
+    def get(self, key):
+        """ Return value for given property key """ 
+        return(self._props.get(key))      
 
 if __name__ == '__main__':
 #     p = Properties(r"/Users/pavang/Projects/github/self_github/TEServices/config/TEServices.properties")
 #     p.load()
 #     p.print_prop()
+    print "running prop_parser"
     pass

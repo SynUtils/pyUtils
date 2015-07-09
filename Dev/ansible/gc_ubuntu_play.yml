@@ -1,0 +1,115 @@
+---
+- hosts: gcubuntu
+  vars:
+    skip_flag: true
+  tasks:
+  # - fail: msg="skipping task"
+  - name: update APT package cache
+    sudo: yes
+    apt: update_cache=yes
+    tags: apt
+
+  - name: install apt packages
+    sudo: yes
+    apt: name={{ item }} state=present force=yes
+    tags: apt
+    with_items:
+    - vim
+    - scons
+    - default-jdk
+    - default-jre
+    - gcc
+    - git-core
+    - ruby-full
+    - python-dev
+    - build-essential
+    - python-pip
+    - libpangox-1.0-0
+    - libindicator7
+    - libcurl3
+    - libxss1
+    - libpango1.0-0
+    - libappindicator1
+    - xdg-utils
+    - xvfb
+    - tmux
+    - rsync
+
+
+#########################################################################
+# node.js installation (latest stable instead of Ubuntu's out-of-date one)
+#########################################################################
+  - name: Node.js | Package prerequisites for node.js
+    action: apt pkg=python-software-properties state=installed
+    sudo: yes
+    tags: nodejs
+
+  - name: Node.js | Add the node.js PPA
+    action: command add-apt-repository -y ppa:chris-lea/node.js creates=/etc/apt/sources.list.d/chris-lea-node_js-precise.list
+    sudo: yes
+    tags: nodejs
+
+  - name: Node.js | Update the apt cache for the new repository
+    action: apt update-cache=yes
+    sudo: yes
+    tags: nodejs
+
+  - name: Node.js | Install nodejs and npm
+    action: apt pkg={{ item }} state=installed
+    sudo: yes
+    tags: nodejs
+    with_items:
+      - nodejs
+      - npm
+  - name: Create symlink nodejs to node
+    file: src=/usr/bin/nodejs dest=/usr/local/bin/node state=link
+    sudo: yes
+    tags: nodejs
+
+#########################################################################
+# Configuration
+#########################################################################
+  - name: Creates directory
+    file: path=~/Projects/ansible state=directory
+    tags:
+         - configuration
+
+  - name: Copy netrc File
+    copy: src=~/ansible/bkpnetrc dest=~/.netrc owner=qopunetest group=eng mode=0644
+    tags:
+         - configuration
+
+  - name: Copy synutil package File
+    copy: src=~/ansible/synutil-1.3.tar.gz dest=/home/qopunetest/Projects/ansible/synutil-1.3.tar.gz mode=0644
+    tags:
+         - configuration
+
+  # - name: Copy boto File
+  #   copy: src=~/ansible/bkpboto dest=~/.boto owner=qopunetest group=eng mode=0600
+  #   tags:\
+  #        - configuration
+
+  - name: Clone git repo
+    git: repo=https://quickoffice-internal.googlesource.com/html-office dest=~/Projects/ansible/html-office
+    tags: git
+
+  - name: "Download Google Chrome"
+    get_url: url=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb dest=~/Projects/ansible
+
+  - name: "install google chrome"
+    command: dpkg -i /home/qopunetest/Projects/ansible/google-chrome-stable_current_amd64.deb
+    sudo: yes
+
+#########################################################################
+# Pip module
+#########################################################################
+  - name: "Install beautifulsoup4 pip module"
+    pip: name=beautifulsoup4 version=4.3.2
+    sudo: yes
+
+  - name: "Install synutil pip module"
+    pip: name=/home/qopunetest/Projects/ansible/synutil-1.3.tar.gz
+    sudo: yes
+
+  # - shell: echo "Flag is disabled!"
+  #   when: not skip_flag
