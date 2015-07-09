@@ -1,0 +1,56 @@
+Started on 9 Jul, 2015 1:23:00 PM
+Using strategy: Default
+[poll] Last Built Revision: Revision fa81f29c866234e404d4d235b7db900efa6f9f87 (refs/remotes/origin/master)
+using .gitcredentials to set credentials
+ >  --version # timeout=10
+[WARNING] Installed git version too old for credentials support
+ >  init /tmp/hudson7177448923296436766tmp # timeout=10
+ >  config --local --remove-section credential # timeout=10
+Could not remove the credential section from the git configuration
+FATAL: hudson.plugins.git.GitException: Could not init /tmp/hudson7177448923296436766tmp
+[8mha:AAAAWB+LCAAAAAAAAP9b85aBtbiIQSmjNKU4P08vOT+vOD8nVc8DzHWtSE4tKMnMz/PLL0ldFVf2c+b/lb5MDAwVRQxSaBqcITRIIQMEMIIUFgAAckCEiWAAAAA=[0mhudson.util.IOException2: hudson.plugins.git.GitException: Could not init /tmp/hudson7177448923296436766tmp
+	at hudson.plugins.git.GitSCM.compareRemoteRevisionWith(GitSCM.java:528)
+	at hudson.scm.SCM.compareRemoteRevisionWith(SCM.java:381)
+	at hudson.scm.SCM.poll(SCM.java:398)
+	at hudson.model.AbstractProject._poll(AbstractProject.java:1453)
+	at hudson.model.AbstractProject.poll(AbstractProject.java:1356)
+	at hudson.triggers.SCMTrigger$Runner.runPolling(SCMTrigger.java:510)
+	at hudson.triggers.SCMTrigger$Runner.run(SCMTrigger.java:539)
+	at hudson.util.SequentialExecutionQueue$QueueEntry.run(SequentialExecutionQueue.java:118)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:262)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: hudson.plugins.git.GitException: Could not init /tmp/hudson7177448923296436766tmp
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl$4.execute(CliGitAPIImpl.java:600)
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl.launchCommandWithCredentials(CliGitAPIImpl.java:1326)
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl.launchCommandWithCredentials(CliGitAPIImpl.java:1277)
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl.launchCommandWithCredentials(CliGitAPIImpl.java:1268)
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl.getHeadRev(CliGitAPIImpl.java:2327)
+	at hudson.plugins.git.GitSCM.compareRemoteRevisionWithImpl(GitSCM.java:576)
+	at hudson.plugins.git.GitSCM.compareRemoteRevisionWith(GitSCM.java:526)
+	... 12 more
+Caused by: hudson.plugins.git.GitException: Error performing command:  init /tmp/hudson7177448923296436766tmp
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl.launchCommandIn(CliGitAPIImpl.java:1598)
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl.launchCommandIn(CliGitAPIImpl.java:1567)
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl.launchCommandIn(CliGitAPIImpl.java:1563)
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl.launchCommand(CliGitAPIImpl.java:1249)
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl$4.execute(CliGitAPIImpl.java:598)
+	... 18 more
+Caused by: java.io.IOException: Cannot run program "": error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1047)
+	at hudson.Proc$LocalProc.<init>(Proc.java:244)
+	at hudson.Proc$LocalProc.<init>(Proc.java:216)
+	at hudson.Launcher$LocalLauncher.launch(Launcher.java:816)
+	at hudson.Launcher$ProcStarter.start(Launcher.java:382)
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl.launchCommandIn(CliGitAPIImpl.java:1587)
+	... 22 more
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:186)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:130)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1028)
+	... 27 more
+Done. Took 11 ms
+No changes
