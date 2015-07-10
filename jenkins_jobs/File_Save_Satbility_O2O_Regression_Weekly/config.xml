@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>Run RT script on specific featured file</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@1.8.4">
+      <maxConcurrentPerNode>0</maxConcurrentPerNode>
+      <maxConcurrentTotal>0</maxConcurrentTotal>
+      <throttleEnabled>false</throttleEnabled>
+      <throttleOption>project</throttleOption>
+    </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <assignedNode>Ubuntu_128</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>BASEPATH=&quot;/home/synerzip123/G_Drive/O2O_regression/WEEKLY/RT-AUTOMATION&quot;
+DOWNLOADBUILDPATH=&quot;/tmp&quot;
+
+cd $BASEPATH/RT-EXECUTABLE/WORD/
+wordCMDNAME=`ls core-saver-docx* | cut -d . -f1,4`
+echo $wordCMDNAME
+if [ -d $BASEPATH/RT-EXECUTOR/OUTPUT/output ]; then
+  mv $BASEPATH/RT-EXECUTOR/OUTPUT/output $BASEPATH/RT-EXECUTOR/OUTPUT-REPO/$wordCMDNAME 
+fi
+cd $DOWNLOADBUILDPATH
+rm -rf core-saver-docx*
+python -m download_build debug wrt
+wordCMDNAME=`ls core-saver-docx*`
+echo $wordCMDNAME
+rm $BASEPATH/RT-AUTOMATION/RT-EXECUTABLE/WORD/*
+cp $DOWNLOADBUILDPATH/$wordCMDNAME $BASEPATH/RT-EXECUTABLE/WORD/
+
+rm -rf cmd-line_sheet*
+python -m download_build debug srt
+sheetCMDNAME=`ls cmd-line_sheet*`
+echo $sheetCMDNAME
+rm $BASEPATH/RT-EXECUTABLE/SHEET/*
+cp $DOWNLOADBUILDPATH/$sheetCMDNAME $BASEPATH/RT-EXECUTABLE/SHEET/
+rm -rf round-trip*
+
+python -m download_build debug prt
+pointCMDNAME=`ls round-trip*`
+echo $pointCMDNAME
+rm /$BASEPATH/RT-EXECUTABLE/POINT/*
+cp $DOWNLOADBUILDPATH/$pointCMDNAME $BASEPATH/RT-EXECUTABLE/POINT/
+
+cd $BASEPATH/RT-EXECUTOR/SCRIPTS
+bash runner.sh</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.tasks.BuildTrigger>
+      <childProjects>O2O_Regression_Weekly</childProjects>
+      <threshold>
+        <name>FAILURE</name>
+        <ordinal>2</ordinal>
+        <color>RED</color>
+        <completeBuild>true</completeBuild>
+      </threshold>
+    </hudson.tasks.BuildTrigger>
+  </publishers>
+  <buildWrappers/>
+</project>

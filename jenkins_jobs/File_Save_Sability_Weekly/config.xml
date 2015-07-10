@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>Finding regression in roundtrip testing .perform rt on virtual box.</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@1.8.4">
+      <maxConcurrentPerNode>0</maxConcurrentPerNode>
+      <maxConcurrentTotal>0</maxConcurrentTotal>
+      <throttleEnabled>false</throttleEnabled>
+      <throttleOption>project</throttleOption>
+    </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <assignedNode>Ubuntu_128</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>INPUTFILESPATH=&quot;/home/synerzip123/G_Drive/jenkins/workspace/Weekly-Open-And-Save-Stability-Files&quot;
+BASEPATH= &apos;/home/synerzip123/G_Drive/Weekly_Run/RT-AUTOMATION&apos; 
+BuildDOWNLOADPATH=&quot;/tmp&quot;
+
+sudo cd $BASEPATH/RT-EXECUTOR/SCRIPTS
+sudo python copy-input-files.py --input_file_path INPUTFILESPATH --rt_folder_path $BASEPATH/RT-EXECUTOR
+
+sudo rm -rf $BASEPATH/POINT/*.*
+sudo rm -rf $BASEPATH/SHEET/*.*
+sudo rm -rf $BASEPATH/WORD/*.*
+sudo rm -rf $BASEPATH/*.zip
+sudorm -rf $WORKSPACE/*.zip
+sudo rm -rf $WORKSPACE/*.csv
+
+
+
+
+sudo cd $BASEPATH/RT-EXECUTABLE/WORD/
+sudo wordCMDNAME=`ls core-saver-docx* | cut -d . -f1,4`
+echo $wordCMDNAME
+if [ -d $BASEPATH/RT-EXECUTOR/OUTPUT/output ]; then
+  mv $BASEPATH/RT-EXECUTOR/OUTPUT/output $BASEPATH/RT-EXECUTOR/OUTPUT-REPO/$wordCMDNAME 
+fi
+
+cd $BuildDOWNLOADPATH
+rm -rf *
+python -m download_build debug wrt
+wordCMDNAME=`ls core-saver-docx* | cut -d . -f1,4`
+echo $wordCMDNAME
+rm -rf $BASEPATH/RT-EXECUTABLE/WORD/*
+cp /home/synerzip123/test/$wordCMDNAME $BASEPATH/RT-EXECUTABLE/WORD/
+ 
+rm -rf *
+python  -m download_build debug srt
+sheetCMDNAME=`ls cmd-line_sheet* | cut -d . -f1,4`
+echo $sheetCMDNAME
+rm -rf $BASEPATH/RT-EXECUTABLE/SHEET/*
+cp /home/synerzip123/test/$sheetCMDNAME $BASEPATH/RT-EXECUTABLE/SHEET/
+ 
+rm -rf *
+python -m download_build debug prt
+pointCMDNAME=`ls round-trip* | cut -d . -f1,4`
+echo $pointCMDNAME
+rm -rf $BASEPATH/RT-EXECUTABLE/POINT/*
+cp /home/synerzip123/test/$pointCMDNAME $BASEPATH/RT-EXECUTABLE/POINT/
+
+cd $BASEPATH/RT-EXECUTOR/SCRIPTS
+#python copy-input-files.py
+bash runner.sh </command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

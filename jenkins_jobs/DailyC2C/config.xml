@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>parameter job for c2c</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@1.8.4">
+      <maxConcurrentPerNode>0</maxConcurrentPerNode>
+      <maxConcurrentTotal>0</maxConcurrentTotal>
+      <throttleEnabled>false</throttleEnabled>
+      <throttleOption>project</throttleOption>
+    </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <assignedNode>DailyC2C_47</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers>
+    <hudson.triggers.TimerTrigger>
+      <spec>00 22 * * * </spec>
+    </hudson.triggers.TimerTrigger>
+  </triggers>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>echo $WORKSPACE
+printenv
+export LC_ALL=&quot;en_US&quot;
+export DISPLAY=:0
+cd /tmp
+rm -rf /tmp/quickoffice*
+python -m download_build debug master
+BUILD_NUMBER=`ls quickoffice* | cut -d - -f3 | cut -d _ -f1`
+echo $BUILD_NUMBER
+if [ ! -d &quot;/var/www/Result/$BUILD_NUMBER/&quot; ]; then
+rm -rf /home/synerzip/Documents/GIT/html-office/crx/app/*
+unzip /tmp/quickoffice* -d /home/synerzip/Documents/GIT/html-office/crx/app/
+python /home/synerzip/Documents/GIT/c2c_update_manifest.py
+cd /home/synerzip/Documents/GIT/html-office/crx/e2eTests/c2cTests/report
+python generate_report.py /home/synerzip/Documents/GIT/c2c_run/c2cprop.txt COMPARE
+mkdir /var/www/Result/$BUILD_NUMBER
+mkdir /var/www/Result/$BUILD_NUMBER/images
+mkdir /var/www/Result/$BUILD_NUMBER/scripts
+cp -r /var/www/images/* /var/www/Result/$BUILD_NUMBER/images/
+cp -r /var/www/scripts/* /var/www/Result/$BUILD_NUMBER/scripts/ 
+cp /var/www/index.html /var/www/Result/$BUILD_NUMBER/
+fi
+
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.plugins.emailext.ExtendedEmailPublisher plugin="email-ext@2.40.3">
+      <recipientList>nagmani.prasad@synerzip.com</recipientList>
+      <configuredTriggers>
+        <hudson.plugins.emailext.plugins.trigger.AlwaysTrigger>
+          <email>
+            <recipientList></recipientList>
+            <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+            <body>$PROJECT_DEFAULT_CONTENT</body>
+            <recipientProviders>
+              <hudson.plugins.emailext.plugins.recipients.ListRecipientProvider/>
+            </recipientProviders>
+            <attachmentsPattern></attachmentsPattern>
+            <attachBuildLog>false</attachBuildLog>
+            <compressBuildLog>false</compressBuildLog>
+            <replyTo>$PROJECT_DEFAULT_REPLYTO</replyTo>
+            <contentType>project</contentType>
+          </email>
+        </hudson.plugins.emailext.plugins.trigger.AlwaysTrigger>
+      </configuredTriggers>
+      <contentType>text/html</contentType>
+      <defaultSubject>Jenkins C2C run.</defaultSubject>
+      <defaultContent>Please find the C2C result at - 
+
+http://172.24.212.47/index.html
+
+
+Thanks,
+Admin Jenkins</defaultContent>
+      <attachmentsPattern></attachmentsPattern>
+      <presendScript>$DEFAULT_PRESEND_SCRIPT</presendScript>
+      <attachBuildLog>true</attachBuildLog>
+      <compressBuildLog>false</compressBuildLog>
+      <replyTo>Admin.jenkins@synerzip.com</replyTo>
+      <saveOutput>false</saveOutput>
+      <disabled>true</disabled>
+    </hudson.plugins.emailext.ExtendedEmailPublisher>
+  </publishers>
+  <buildWrappers/>
+</project>

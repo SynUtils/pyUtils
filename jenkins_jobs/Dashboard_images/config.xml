@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@1.8.4">
+      <maxConcurrentPerNode>0</maxConcurrentPerNode>
+      <maxConcurrentTotal>0</maxConcurrentTotal>
+      <throttleEnabled>false</throttleEnabled>
+      <throttleOption>project</throttleOption>
+    </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <assignedNode>Windows_56</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers>
+    <hudson.triggers.TimerTrigger>
+      <spec>H/5 9-19 * * *</spec>
+    </hudson.triggers.TimerTrigger>
+  </triggers>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.BatchFile>
+      <command>cd E:\&#xd;
+cd E:\DashboardScript&#xd;
+python E:\DashboardScript\crop_image.py --url_path=&quot;http://172.24.212.135:3000/&quot; --image_path=&quot;d:\NetworkMonitor.png&quot;  --top=0 --bottom=100 --width=1900 --height=550&#xd;
+python E:\DashboardScript\crop_image.py --url_path=&quot;https://www.google.com/finance?cid=15173681&quot; --image_path=&quot;d:\SensexToday.png&quot;  --top=210 --bottom=75 --width=1570 --height=620 &#xd;
+xcopy /c /y d:\NetworkMonitor.png &quot;\\172.24.212.108\c\Share Folder&quot;&#xd;
+xcopy /c /y d:\SensexToday.png &quot;\\172.24.212.108\c\Share Folder&quot; </command>
+    </hudson.tasks.BatchFile>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

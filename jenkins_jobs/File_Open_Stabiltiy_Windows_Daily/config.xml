@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>Run_File_Open_Stabiltiy_on_windows</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@1.8.4">
+      <maxConcurrentPerNode>0</maxConcurrentPerNode>
+      <maxConcurrentTotal>0</maxConcurrentTotal>
+      <categories>
+        <string>NodeAndChromeBasedJobs</string>
+      </categories>
+      <throttleEnabled>false</throttleEnabled>
+      <throttleOption>category</throttleOption>
+    </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <assignedNode>Windows_98</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers>
+    <hudson.triggers.TimerTrigger>
+      <spec></spec>
+    </hudson.triggers.TimerTrigger>
+  </triggers>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.BatchFile>
+      <command>set crx_path=&quot;E:\html-office\crx&quot;&#xd;
+set BACKUP-FILES=&quot;E:\Project\jenkins_work\backupFiles&quot;&#xd;
+echo %BACKUP-FILES%&#xd;
+del /F /Q /S E:\tmp\*.zip&#xd;
+cd e:&#xd;
+&#xd;
+del /F /Q /S Th*.db &#xd;
+del /F /Q *.zip&#xd;
+del /F /Q e:\tmp\*.zip&#xd;
+del /F /Q %crx_path%\app\* &#xd;
+del /F /Q %crx_path%\e2eTests\*.zip&#xd;
+&#xd;
+copy %BACKUP-FILES%\* %crx_path%\e2eTests\miscTests\openStabilityTest\testFiles\*.*&#xd;
+&#xd;
+cd %crx_path%\e2eTests&#xd;
+cd e:&#xd;
+python -m download_build&#xd;
+python Wrapper_Setup.py --build_path E:\tmp --crx_path %crx_path% --tool_name open_stability&#xd;
+</command>
+    </hudson.tasks.BatchFile>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

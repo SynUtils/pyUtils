@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>Run File open Stability on CWS_EXT build</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@1.8.4">
+      <maxConcurrentPerNode>0</maxConcurrentPerNode>
+      <maxConcurrentTotal>0</maxConcurrentTotal>
+      <throttleEnabled>false</throttleEnabled>
+      <throttleOption>project</throttleOption>
+    </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <assignedNode>MAC_55</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>true</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers>
+    <hudson.triggers.TimerTrigger>
+      <spec>0 */2 * * *</spec>
+    </hudson.triggers.TimerTrigger>
+  </triggers>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>cd /Users/synerzip/Weekly_Open_Stability_Run/build/
+rm -rf *
+python /Users/synerzip/Weekly_Open_Stability_Run/Scripts/download_build.py cwsInt
+BUILD_NUMBER=`ls quickoffice*`
+echo $BUILD_NUMBER
+cd /Users/synerzip/Weekly_Open_Stability_Run/Quickoffice/qo
+if [ ! -d &quot;$BUILD_NUMBER&quot; ]; then
+rm -rf *
+mkdir $BUILD_NUMBER
+unzip -o /Users/synerzip/Weekly_Open_Stability_Run/build/quickoffice* -d /Users/synerzip/Weekly_Open_Stability_Run/Quickoffice/qo/$BUILD_NUMBER/
+cd /Users/synerzip/Weekly_Open_Stability_Run/build
+rm -rf *
+cd /Users/synerzip/Weekly_Open_Stability_Run/Quickoffice
+java -jar /Users/synerzip/Weekly_Open_Stability_Run/Quickoffice/cwsextbuildrun.jar
+else
+   echo &quot;Already processed run on this build&quot;
+fi
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.plugins.emailext.ExtendedEmailPublisher plugin="email-ext@2.39.3">
+      <recipientList>nagmani.prasad@synerzip.com, chandni.dave@synerzip.com</recipientList>
+      <configuredTriggers>
+        <hudson.plugins.emailext.plugins.trigger.FailureTrigger>
+          <email>
+            <recipientList></recipientList>
+            <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+            <body>$PROJECT_DEFAULT_CONTENT</body>
+            <recipientProviders>
+              <hudson.plugins.emailext.plugins.recipients.ListRecipientProvider/>
+            </recipientProviders>
+            <attachmentsPattern></attachmentsPattern>
+            <attachBuildLog>false</attachBuildLog>
+            <compressBuildLog>false</compressBuildLog>
+            <replyTo>$PROJECT_DEFAULT_REPLYTO</replyTo>
+            <contentType>project</contentType>
+          </email>
+        </hudson.plugins.emailext.plugins.trigger.FailureTrigger>
+      </configuredTriggers>
+      <contentType>default</contentType>
+      <defaultSubject>Build Failed</defaultSubject>
+      <defaultContent>$DEFAULT_CONTENT
+
+Build Failed</defaultContent>
+      <attachmentsPattern></attachmentsPattern>
+      <presendScript>$DEFAULT_PRESEND_SCRIPT</presendScript>
+      <attachBuildLog>true</attachBuildLog>
+      <compressBuildLog>false</compressBuildLog>
+      <replyTo>CwExt@jenkins.com</replyTo>
+      <saveOutput>false</saveOutput>
+      <disabled>false</disabled>
+    </hudson.plugins.emailext.ExtendedEmailPublisher>
+  </publishers>
+  <buildWrappers/>
+</project>

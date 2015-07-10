@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@1.8.4">
+      <maxConcurrentPerNode>0</maxConcurrentPerNode>
+      <maxConcurrentTotal>0</maxConcurrentTotal>
+      <categories>
+        <string>NodeAndChromeBasedJobs</string>
+      </categories>
+      <throttleEnabled>true</throttleEnabled>
+      <throttleOption>category</throttleOption>
+    </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <assignedNode>performance_107</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>#killall node chrome Xvfb
+#echo /home/synerzip/.jenkins/jobs/perf_save_107_ubuntu12/$BUILD_ID/archive/avgOpenPerformance.txt
+/usr/bin/Xvfb :99 -ac -screen 0 1024x768x8 &amp;
+export DISPLAY=:99
+#cd /tmp
+#sudo rm -rf /tmp/quickoffice*
+#sudo python -m download_build debug master
+#BUILD_NUMBER=`ls quickoffice* | cut -d . -f1,4`
+#export BUILD_NUMBER=&quot;2_layout_with_render&quot;
+#rm -rf /home/synerzip/Projects/perf_exp/html-office/crx/app/*
+#unzip /tmp/quickoffice* -d /home/synerzip/Projects/html-office/crx/app/
+cd /home/synerzip/Projects/perf_exp/html-office/crx/e2eTests
+python run_misc_test.py --perf --build 976
+#cp /home/synerzip/Projects/html-office/crx/e2eTests/miscTests/result/app/performance/fileLoadPerformance/avg.txt /home/synerzip/Projects/jenkins_work/workspace/perf_save_107_ubuntu12/
+#echo 3278_1
+#mv /home/synerzip/Projects/jenkins_work/workspace/perf_save_107_ubuntu12/avg.txt /home/synerzip/Projects/jenkins_work/workspace/perf_save_107_ubuntu12/avgOpenPerformance.txt
+#echo 3278_1
+#cp /home/synerzip/Projects/html-office/crx/e2eTests/miscTests/result/3278_1/performance/savePerformance/avg.txt /home/synerzip/Projects/jenkins_work/workspace/perf_save_107_ubuntu12/
+#mv /home/synerzip/Projects/jenkins_work/workspace/perf_save_107_ubuntu12/avg.txt /home/synerzip/Projects/jenkins_work/workspace/perf_save_107_ubuntu12/avgSavePerformance.txt
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers>
+    <org.jenkinsci.plugins.xvfb.XvfbBuildWrapper plugin="xvfb@1.0.13">
+      <installationName>default</installationName>
+      <screen>024x768x8</screen>
+      <debug>true</debug>
+      <timeout>0</timeout>
+      <displayNameOffset>1</displayNameOffset>
+      <additionalOptions></additionalOptions>
+      <shutdownWithBuild>false</shutdownWithBuild>
+      <autoDisplayName>true</autoDisplayName>
+      <assignedLabels>performance_90</assignedLabels>
+    </org.jenkinsci.plugins.xvfb.XvfbBuildWrapper>
+  </buildWrappers>
+</project>

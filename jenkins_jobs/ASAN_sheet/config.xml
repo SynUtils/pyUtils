@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@1.8.4">
+      <maxConcurrentPerNode>0</maxConcurrentPerNode>
+      <maxConcurrentTotal>0</maxConcurrentTotal>
+      <throttleEnabled>false</throttleEnabled>
+      <throttleOption>project</throttleOption>
+    </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <assignedNode>asan_all_85</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>cd /tmp
+rm -rf /tmp/asan_*
+python -m download_build debug sasan
+BUILD_NUMBER=`ls asan* | cut -d _ -f3`
+echo $BUILD_NUMBER
+if [ ! -d &quot;/home/synerzip/Projects/ASAN/SHEET/$BUILD_NUMBER/&quot; ]; then
+rm -rf /home/synerzip/Projects/ASAN/SHEET/asan_*
+mkdir /home/synerzip/Projects/ASAN/SHEET/$BUILD_NUMBER/
+cp /tmp/asan_* /home/synerzip/Projects/ASAN/SHEET/asan_sheet
+chmod a+x /home/synerzip/Projects/ASAN/SHEET/asan_sheet
+cd /home/synerzip/Projects/ASAN/SHEET/$BUILD_NUMBER/
+ruby /home/synerzip/Projects/ASAN/SHEET/asan.rb /home/synerzip/Projects/ASAN/SHEET/files/
+cp /home/synerzip/Projects/ASAN/SHEET/$BUILD_NUMBER/*.csv /home/synerzip/Projects/jenkins_work/workspace/ASAN_sheet/
+fi</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>*.csv</artifacts>
+      <allowEmptyArchive>false</allowEmptyArchive>
+      <onlyIfSuccessful>false</onlyIfSuccessful>
+      <fingerprint>false</fingerprint>
+      <defaultExcludes>true</defaultExcludes>
+    </hudson.tasks.ArtifactArchiver>
+    <hudson.tasks.BuildTrigger>
+      <childProjects>ASAN_csv</childProjects>
+      <threshold>
+        <name>SUCCESS</name>
+        <ordinal>0</ordinal>
+        <color>BLUE</color>
+        <completeBuild>true</completeBuild>
+      </threshold>
+    </hudson.tasks.BuildTrigger>
+  </publishers>
+  <buildWrappers/>
+</project>

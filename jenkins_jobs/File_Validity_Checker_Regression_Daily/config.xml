@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>Checking File validity after RT in MSO</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@1.8.4">
+      <maxConcurrentPerNode>0</maxConcurrentPerNode>
+      <maxConcurrentTotal>0</maxConcurrentTotal>
+      <throttleEnabled>false</throttleEnabled>
+      <throttleOption>project</throttleOption>
+    </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <assignedNode>Windows_14</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.BatchFile>
+      <command>cd F:\RT-AUTOMATION\RT-EXECUTOR\SCRIPTS&#xd;
+F:&#xd;
+python rename_rt_files.py --round_trip_dir F:\RT-AUTOMATION\RT-EXECUTOR\OUTPUT\output\RoundTripFiles</command>
+    </hudson.tasks.BatchFile>
+    <org.jenkinsci.plugins.windows__exe__runner.ExeBuilder plugin="windows-exe-runner@1.2">
+      <exeName>DailyFileValidityChecker.exe</exeName>
+      <cmdLineArgs>F:\RT-AUTOMATION\RT-EXECUTOR\OUTPUT\output\RoundTripFiles</cmdLineArgs>
+      <failBuild>true</failBuild>
+    </org.jenkinsci.plugins.windows__exe__runner.ExeBuilder>
+    <hudson.tasks.BatchFile>
+      <command>del /F /Q F:\jenkins\workspace\File_Validity_Checker_Weekly\*.*&#xd;
+cd F:\RT-AUTOMATION\RT-EXECUTOR\SCRIPTS&#xd;
+F:&#xd;
+del /F /Q *.zip&#xd;
+python FindandCopyOrignalFiles.py --RT_result_path F:\RT-AUTOMATION\RT-EXECUTOR\OUTPUT\output&#xd;
+python post_build_processor.py --result_dir F:\RT-AUTOMATION\RT-EXECUTOR\OUTPUT\output --save_stability&#xd;
+</command>
+    </hudson.tasks.BatchFile>
+  </builders>
+  <publishers>
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>*.zip</artifacts>
+      <allowEmptyArchive>false</allowEmptyArchive>
+      <onlyIfSuccessful>false</onlyIfSuccessful>
+      <fingerprint>false</fingerprint>
+      <defaultExcludes>true</defaultExcludes>
+    </hudson.tasks.ArtifactArchiver>
+  </publishers>
+  <buildWrappers/>
+</project>

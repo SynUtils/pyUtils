@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@1.8.4">
+      <maxConcurrentPerNode>0</maxConcurrentPerNode>
+      <maxConcurrentTotal>0</maxConcurrentTotal>
+      <throttleEnabled>false</throttleEnabled>
+      <throttleOption>project</throttleOption>
+    </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <assignedNode>asan_all_85</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>BASE_PATH=&apos;/home/synerzip/Projects/ASAN/WORD&apos;
+cd /tmp
+rm -rf /tmp/asan_*
+python -m download_build debug wasan
+BUILD_NUMBER=`ls asan* | cut -d _ -f3`
+echo $BUILD_NUMBER
+if [ ! -d &quot;$BASE_PATH/$BUILD_NUMBER/&quot; ]; then
+rm -rf $BASE_PATH/asan_*
+mkdir $BASE_PATH/$BUILD_NUMBER/
+cp /tmp/asan_* $BASE_PATH/asan_word
+chmod a+x $BASE_PATH/asan_word
+cd $BASE_PATH/$BUILD_NUMBER/
+python $BASE_PATH/../asan.py -binary_file $BASE_PATH/asan_word -test_files $BASE_PATH/files/
+#ruby /home/synerzip/Projects/ASAN/WORD/asan.rb /home/synerzip/Projects/ASAN/WORD/files/
+#cp $BASE_PATH/*.csv $BASE_PATH/$BUILD_NUMBER/
+cp $BASE_PATH/$BUILD_NUMBER/*.csv $WORKSPACE
+fi</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>*.csv</artifacts>
+      <allowEmptyArchive>false</allowEmptyArchive>
+      <onlyIfSuccessful>false</onlyIfSuccessful>
+      <fingerprint>false</fingerprint>
+      <defaultExcludes>true</defaultExcludes>
+    </hudson.tasks.ArtifactArchiver>
+    <hudson.tasks.BuildTrigger>
+      <childProjects>dummy_ASAN_SHEET</childProjects>
+      <threshold>
+        <name>FAILURE</name>
+        <ordinal>2</ordinal>
+        <color>RED</color>
+        <completeBuild>true</completeBuild>
+      </threshold>
+    </hudson.tasks.BuildTrigger>
+  </publishers>
+  <buildWrappers/>
+</project>

@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>Run post edit save test</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@1.8.4">
+      <maxConcurrentPerNode>0</maxConcurrentPerNode>
+      <maxConcurrentTotal>0</maxConcurrentTotal>
+      <categories>
+        <string>NodeAndChromeBasedJobs</string>
+      </categories>
+      <throttleEnabled>true</throttleEnabled>
+      <throttleOption>category</throttleOption>
+    </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <assignedNode>Windows_25</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers>
+    <hudson.triggers.TimerTrigger>
+      <spec></spec>
+    </hudson.triggers.TimerTrigger>
+  </triggers>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.BatchFile>
+      <command>set CRXPATH=&quot;F:\Project\html-office\crx&quot;&#xd;
+del /F /Q /S %WORKSPACE%\*&#xd;
+del /f /q F:\tmp\*.zip&#xd;
+cd F:&#xd;
+python -m download_build &#xd;
+&#xd;
+cd %CRXPATH%\app&#xd;
+python F:\Postedittest\unzipbuild.py&#xd;
+cd %CRXPATH%\e2eTests\&#xd;
+&#xd;
+python run_misc_test.py --post_edit_save --build 1&#xd;
+copy F:\Postedittest\RegressionOO\XpsToPngConverter.exe F:\Jenkins\workspace\Post_Edit_Save_Test_using_e2e\XpsToPngConverter.exe</command>
+    </hudson.tasks.BatchFile>
+    <org.jenkinsci.plugins.windows__exe__runner.ExeBuilder plugin="windows-exe-runner@1.2">
+      <exeName>PostEditSaveTestFileValiditychecker.exe</exeName>
+      <cmdLineArgs>F:\Project\html-office\crx\e2eTests\miscTests\result\1\postEditSave\roundtripedFiles F:\Postedittest\scripts SCREEN</cmdLineArgs>
+      <failBuild>true</failBuild>
+    </org.jenkinsci.plugins.windows__exe__runner.ExeBuilder>
+    <hudson.tasks.BatchFile>
+      <command>cd F:\\Postedittest&#xd;
+F: &#xd;
+python genrateReport.py</command>
+    </hudson.tasks.BatchFile>
+  </builders>
+  <publishers>
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>**/*.zip,RunDetails.csv,FailFiles.csv,Image_Verification.CSV</artifacts>
+      <allowEmptyArchive>false</allowEmptyArchive>
+      <onlyIfSuccessful>false</onlyIfSuccessful>
+      <fingerprint>false</fingerprint>
+      <defaultExcludes>true</defaultExcludes>
+    </hudson.tasks.ArtifactArchiver>
+  </publishers>
+  <buildWrappers>
+    <org.jenkinsci.plugins.xvfb.XvfbBuildWrapper plugin="xvfb@1.0.16">
+      <installationName>default</installationName>
+      <screen>024x768x8</screen>
+      <debug>true</debug>
+      <timeout>0</timeout>
+      <displayNameOffset>1</displayNameOffset>
+      <additionalOptions></additionalOptions>
+      <shutdownWithBuild>false</shutdownWithBuild>
+      <autoDisplayName>true</autoDisplayName>
+      <assignedLabels>performance_90</assignedLabels>
+      <parallelBuild>false</parallelBuild>
+    </org.jenkinsci.plugins.xvfb.XvfbBuildWrapper>
+  </buildWrappers>
+</project>
