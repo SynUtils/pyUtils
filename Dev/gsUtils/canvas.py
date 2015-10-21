@@ -109,14 +109,14 @@ def test_namespace_health_test():
                                                        'stop-writes': 'true',
                                                        'stop-writes-pct': '90'}}}
     health_params = {   'min-avail-pct' : 'OK', 
-                                'stop-writes' : 'OK',
-                                'hwm-breached' : 'OK',
-                                'memory-size' : 'OK',
-                                'high-water-disk-pct' : 'OK',
-                                'high-water-memory-pct' : 'WARNING',
-                                'stop-writes-pct' : 'CRITICAL',
-                                'repl-factor' : 'OK',
-                                'set-evicted-objects' : 'OK'
+                        'stop-writes' : 'OK',
+                        'hwm-breached' : 'OK',
+                        'memory-size' : 'OK',
+                        'high-water-disk-pct' : 'OK',
+                        'high-water-memory-pct' : 'WARNING',
+                        'stop-writes-pct' : 'CRITICAL',
+                        'repl-factor' : 'OK',
+                        'set-evicted-objects' : 'OK'
                     }
 
 def test_namespace_health_bar():
