@@ -3,20 +3,34 @@ FROM centos:centos6
 MAINTAINER Pavan Gupta <pavan.gupta@gslab.com>
 
 RUN yum -y update; yum clean all
-RUN yum -y install java-1.7.0-openjdk-devel.x86_64
 RUN yum -y install which
 RUN yum -y install epel-release
 RUN yum -y install openssh-server
 RUN yum -y install passwd
 RUN yum -y install openssl-devel
 RUN yum -y install wget
-RUN yum -y install git
 RUN	yum -y install gcc gcc-c++ kernel-devel make
+RUN yum -y install java-1.7.0-openjdk java-1.7.0-openjdk-devel
 RUN	rm -f /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_rsa_key && \
     ssh-keygen -q -N "" -t dsa -f /etc/ssh/ssh_host_ecdsa_key && \
     ssh-keygen -q -N "" -t rsa -f /etc/ssh/ssh_host_rsa_key
 
-
+#------------------------------------------------------------------------------
+# GIT Installation
+# Installing GIT from soure as default version(1.7.1) is not allowing to clone the repo
+#------------------------------------------------------------------------------
+RUN yum install -y curl-devel expat-devel gettext-devel zlib-devel
+RUN yum install -y perl-ExtUtils-MakeMaker
+RUN wget https://www.kernel.org/pub/software/scm/git/git-2.0.4.tar.gz
+RUN tar xzf git-2.0.4.tar.gz
+WORKDIR /git-2.0.4
+RUN echo $(pwd)
+RUN make prefix=/usr/local/git all
+WORKDIR /git-2.0.4
+RUN make prefix=/usr/local/git install
+RUN echo 'export PATH=$PATH:/usr/local/git/bin' >> /etc/bashrc
+RUN source /etc/bashrc
+#-------------------------------------------------------------------------------
 RUN echo "root:root" | chpasswd
 
 #------------------------------------------------------------------------------

@@ -1,0 +1,13 @@
+FROM c6_core
+
+MAINTAINER Pavan Gupta <pavan.gupta@gslab.com>
+
+RUN yum -y install python-pip && \
+	yum -y install python-devel 
+
+
+#------------------------------------------------------------------------------
+# PIP packages
+#------------------------------------------------------------------------------
+RUN pip install pytest
+#------------------------------------------------------------------------------
