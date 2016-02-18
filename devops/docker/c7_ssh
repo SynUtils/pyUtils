@@ -33,15 +33,16 @@ RUN echo "root:root" | chpasswd
 ENV AEROSPIKE_VERSION 3.7.3
 ENV PLATFORM el7
 
-RUN wget "https://www.aerospike.com/artifacts/aerospike-server-community/${AEROSPIKE_VERSION}/aerospike-server-community-${AEROSPIKE_VERSION}-${PLATFORM}.tgz" -O aerospike.tgz
-RUN tar -xvf aerospike.tgz
-RUN rpm -ivh aerospike-server-community-${AEROSPIKE_VERSION}-${PLATFORM}/aerospike-server-community-${AEROSPIKE_VERSION}-1.${PLATFORM}.x86_64.rpm
-RUN rpm -ivh aerospike-server-community-${AEROSPIKE_VERSION}-${PLATFORM}/aerospike-tools-${AEROSPIKE_VERSION}-1.${PLATFORM}.x86_64.rpm 
+#RUN wget "https://www.aerospike.com/artifacts/aerospike-server-community/${AEROSPIKE_VERSION}/aerospike-server-community-${AEROSPIKE_VERSION}-${PLATFORM}.tgz" -O aerospike.tgz
+#RUN tar -xvf aerospike.tgz
+#RUN rpm -ivh aerospike-server-community-${AEROSPIKE_VERSION}-${PLATFORM}/aerospike-server-community-${AEROSPIKE_VERSION}-1.${PLATFORM}.x86_64.rpm
+#RUN rpm -ivh aerospike-server-community-${AEROSPIKE_VERSION}-${PLATFORM}/aerospike-tools-${AEROSPIKE_VERSION}-1.${PLATFORM}.x86_64.rpm 
 
 # To Fetch Latest
-#RUN wget -O aerospike.tgz 'http://aerospike.com/download/server/latest/artifact/${PLATFORM}'
-#RUN aerospike-server-community-*-${PLATFORM}/asinstall
-#RUN asd
+RUN wget -O aerospike.tgz 'http://aerospike.com/download/server/latest/artifact/${PLATFORM}'
+RUN tar -xvf aerospike.tgz
+RUN aerospike-server-community-*-${PLATFORM}/asinstall
+RUN asd
 #--------------------------------------------------------------------------------
 
 EXPOSE 22 3000 3001 3002 3003

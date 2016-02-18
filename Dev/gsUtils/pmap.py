@@ -107,6 +107,16 @@ test:12:A:2:0:0:0:0:0:0:0:0
 }
 
 part_data = [[], [], [], [1], [0], [1], [], [1], [], [0], [0], [0]]
+ns_info = {
+           'test': {'repl_factor': 2,
+                    'avg_master_objs':112,
+                    'avg_replica_objs': 100
+                    },
+           'bar': {'repl_factor': 2,
+                   'avg_master_objs':50,
+                    'avg_replica_objs': 50
+                    }
+           }
 
 def format_missing_part(part_data):
     missing_part = ''
@@ -117,11 +127,12 @@ def format_missing_part(part_data):
                 missing_part += get_part(pid, pindex)
     return missing_part[:-1]
 
-def get_distribution_delta(expected_objects, actual_objects):
-    pass
-
-def get_pmap_data(self, pmap_info, repl_factor = 2):
+def get_pmap_data(self, pmap_info, ns_info):
+    # TODO: handle ZeroDivisionError 
+    # TODO: check if node not have master & replica objects 
     pid_range = 13        # each namespace is devided into 4096 partition
+    disc_pct_allowed = 1   # Considering Negative & Positive both discrepancy
+    get_dist_delta = lambda exp, act: abs((exp - act) * 100 / exp) > disc_pct_allowed
     pmap_data = {}
     ns_missing_part = {}
     visited_ns = set()
@@ -136,17 +147,26 @@ def get_pmap_data(self, pmap_info, repl_factor = 2):
             if ns not in node_pmap:
                 node_pmap[ns] = { 'pri_index' : 0,
                                   'sec_index' : 0,
+                                  'master_disc_part': [],
+                                  'replica_disc_part':[]
                                 }
             if ns not in visited_ns:
                 ns_missing_part[ns] = {}
-                ns_missing_part[ns]['missing_part'] = [range(repl_factor) for i in range(pid_range)]
+                ns_missing_part[ns]['missing_part'] = [range(ns_info[ns.strip()]['repl_factor']) for i in range(pid_range)]
                 visited_ns.add(ns)
             if state == 'S':
-                if  pindex == 0:
-                    node_pmap[ns]['pri_index'] += 1
-                if  pindex in range(1, repl_factor):
-                    node_pmap[ns]['sec_index'] += 1
-                ns_missing_part[ns]['missing_part'][pid].remove(pindex)
+                try:
+                    if  pindex == 0:
+                        node_pmap[ns]['pri_index'] += 1
+                        if get_dist_delta(ns_info[ns.strip()]['avg_master_objs'], master_obj):
+                            node_pmap[ns]['master_disc_part'].append(pid)
+                    if  pindex in range(1, ns_info[ns.strip()]['repl_factor']):
+                        node_pmap[ns]['sec_index'] += 1
+                        if get_dist_delta(ns_info[ns.strip()]['avg_replica_objs'], master_obj):
+                            node_pmap[ns]['replica_disc_part'].append(pid)
+                    ns_missing_part[ns]['missing_part'][pid].remove(pindex)
+                except Exception as e:
+                    print e
             if pid not in range(pid_range):
                 print "For {0} found partition-ID {1} which is beyond legal partitions(0...4096)".format(ns, pid)
         for _ns, config in node_pmap.items():
@@ -160,7 +180,7 @@ def get_pmap_data(self, pmap_info, repl_factor = 2):
 
 if __name__ == '__main__':
 #     print format_missing_part(part_data)
-    pmap_data = get_pmap_data(None, pmap_info_obj)
+    pmap_data = get_pmap_data(None, pmap_info, ns_info)
     for k, v in pmap_data.items():
         print k 
         for key, value in v.items():

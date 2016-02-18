@@ -1,18 +1,4 @@
-ns_count = {'10.71.71.187:3000': ['test', 'bar'], '10.71.71.49:3000': ['test', 'bar']}
-
-
-def unanimous(ns_count):
-    it = iter(ns_count)
-    first = it.next()
-    return all(i == first for i in it)
-
-
-if __name__ ==  '__main__':
-    print unanimous(ns_count.values())
-
-    
-    
-    
-    
-        
-        
+actual_header = "Percentage of records having ttl less than or equal to value measured in Seconds Node       10%       20%       30%       40%       50%       60%       70%       80%       90%      100%"
+actual_header = ' '.join([item for item in actual_header.split()
+                                  if not item.startswith('\x1b')])
+print "Node" in actual_header
