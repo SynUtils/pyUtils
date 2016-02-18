@@ -1,0 +1,18 @@
+FROM u14_core
+MAINTAINER Pavan Gupta <pavan.gupta@gslab.com>
+
+RUN	apt-get install -y python3.4-dev && \
+	apt-get install -y python3-setuptools && \
+	easy_install3 pip
+
+#------------------------------------------------------------------------------
+# PIP packages
+#------------------------------------------------------------------------------
+RUN pip install pytest
+
+#------------------------------------------------------------------------------
+# Redirecting to old python
+#------------------------------------------------------------------------------
+RUN 	cp /usr/bin/python /usr/bin/oldpython && \
+	rm -rf /usr/bin/python && \
+	ln -s /usr/bin/python3 /usr/bin/python

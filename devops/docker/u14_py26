@@ -1,0 +1,35 @@
+FROM u14_core
+MAINTAINER Pavan Gupta <pavan.gupta@gslab.com>
+
+RUN	apt-get install -y python-software-properties && \
+	apt-get install -y software-properties-common && \
+	add-apt-repository -y ppa:fkrull/deadsnakes && \
+	apt-get update && \
+	apt-get install -y python2.6 python2.6-dev
+
+#------------------------------------------------------------------------------
+# Install setup tools
+#------------------------------------------------------------------------------
+RUN 	wget https://pypi.python.org/packages/source/e/ez_setup/ez_setup-0.9.tar.gz && \
+	tar -xvf ez_setup-0.9.tar.gz && \
+	cd ez_setup-0.9 && \
+	python2.6 ez_setup.py && \
+	cd ..
+
+#------------------------------------------------------------------------------
+# Install pip
+#------------------------------------------------------------------------------
+RUN 	wget https://bootstrap.pypa.io/get-pip.py && \
+	python2.6 get-pip.py
+
+#------------------------------------------------------------------------------
+# Pip install packages
+#------------------------------------------------------------------------------
+RUN 	pip install pytest
+
+#------------------------------------------------------------------------------
+# Redirecting to default python
+#------------------------------------------------------------------------------
+RUN 	cp /usr/bin/python /usr/bin/oldpython && \
+	rm -rf /usr/bin/python && \
+	ln -s /usr/bin/python2.6 /usr/bin/python
