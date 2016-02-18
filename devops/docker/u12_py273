@@ -1,38 +1,11 @@
-FROM ubuntu:12.04
+FROM u12_core
 MAINTAINER Pavan Gupta <pavan.gupta@gslab.com>
 
-RUN apt-get update
-RUN	apt-get install -y openjdk-7-jdk
-RUN	apt-get install -y openssh-server
-RUN	apt-get install -y git-core
-RUN	apt-get install -y build-essential
-RUN apt-get install -y logrotate
-#------------------------------------------------------------------------------
-# SSH
-#------------------------------------------------------------------------------
-RUN mkdir /var/run/sshd
-RUN echo 'root:root' | chpasswd
-RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-
-# SSH login fix. Otherwise user is kicked off after login
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
-
+RUN	apt-get install -y python-pip && \
+	apt-get install -y python-dev && \
+	apt-get install -y libssl-dev
 
 #------------------------------------------------------------------------------
-# Aerospike
+# PIP packages
 #------------------------------------------------------------------------------
-#ENV AEROSPIKE_VERSION 3.7.3
-#ENV PLATFORM ubuntu14.04
-
-#RUN wget "https://www.aerospike.com/artifacts/aerospike-server-community/${AEROSPIKE_VERSION}/aerospike-server-community-${AEROSPIKE_VERSION}-${PLATFORM}.tgz" -O aerospike.tgz
-#RUN tar -xvf aerospike.tgz
-#RUN dpkg -i aerospike-server-community-${AEROSPIKE_VERSION}-${PLATFORM}/aerospike-*.deb
-
-# Download latest aerospike
-RUN wget -O aerospike.tgz 'http://aerospike.com/download/server/latest/artifact/ubuntu12'
-RUN tar -xvf aerospike.tgz
-RUN dpkg -i aerospike-server-community-*/*.deb
-
-
-EXPOSE 22 3000 3001 3002 3003
-CMD ["/usr/sbin/sshd", "-D"]
+RUN pip install pytest
