@@ -1,0 +1,11 @@
+FROM u14_core
+MAINTAINER Pavan Gupta <pavan.gupta@gslab.com>
+
+RUN	apt-get install -y python-pip && \
+	apt-get install -y python-dev && \
+	apt-get install -y libssl-dev
+
+#------------------------------------------------------------------------------
+# PIP packages
+#------------------------------------------------------------------------------
+RUN pip install pytest
