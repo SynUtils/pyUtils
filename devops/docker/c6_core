@@ -2,6 +2,9 @@ FROM centos:centos6
 
 MAINTAINER Pavan Gupta <pavan.gupta@gslab.com>
 
+LABEL description="This image can be used as centos-6 base for aerospike python and php connectors"
+
+
 RUN yum -y update; yum clean all
 RUN yum -y install which
 RUN yum -y install epel-release

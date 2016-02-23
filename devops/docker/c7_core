@@ -1,6 +1,8 @@
 FROM centos:centos7
-
 MAINTAINER Pavan Gupta <pavan.gupta@gslab.com>
+
+LABEL description="This image can be used as centos-7 base for aerospike python and php connectors"
+
 
 RUN yum -y update; yum clean all
 RUN yum -y install java-1.7.0-openjdk-devel.x86_64
