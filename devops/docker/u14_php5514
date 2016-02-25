@@ -1,0 +1,18 @@
+FROM u14_core
+MAINTAINER Pavan Gupta <pavan.gupta@gslab.com>
+
+RUN apt-get install -y autoconf libssl-dev
+
+#------------------------------------------------------------------------------
+# Build PHP From Source
+#------------------------------------------------------------------------------
+RUN apt-get install -y libxml2-dev
+RUN wget -O php-5.5.14.tar.gz http://us.php.net/get/php-5.5.14.tar.gz/from/this/mirror && \
+	tar -zxvf php-5.5.14.tar.gz && \
+	cd php-5.5.14 && \
+	./configure --enable-debug && \
+	make && \
+	make install && \
+	cp php.ini-development /usr/local/lib/php.ini
+
+RUN echo "extension=/root/aerospike-client-php/src/aerospike/modules/aerospike.so" >> /usr/local/lib/php.ini
