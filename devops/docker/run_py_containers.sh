@@ -1,5 +1,4 @@
-# 
-# run.sh will launch docker containers in one go
+# run.sh will launch python docker containers in one go
 
 # Ubuntu 14 
 docker run -itdp 14276:22 u14_py276
