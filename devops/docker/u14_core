@@ -9,6 +9,8 @@ RUN apt-get update && \
 	apt-get install -y git-core && \
 	apt-get install -y build-essential
 	
+RUN	apt-get install -y libssl-dev
+
 #------------------------------------------------------------------------------
 # SSH
 #------------------------------------------------------------------------------
@@ -35,6 +37,7 @@ RUN wget -O aerospike.tgz 'http://aerospike.com/download/server/latest/artifact/
 RUN tar -xvf aerospike.tgz
 RUN dpkg -i aerospike-server-community-*/*.deb
 
+COPY aerospike.conf /etc/aerospike/
 
 EXPOSE 22 3000 3001 3002 3003
 CMD ["/usr/sbin/sshd", "-D"]
