@@ -35,6 +35,8 @@ ENV PLATFORM el7
 RUN wget -O aerospike.tgz 'http://aerospike.com/download/server/latest/artifact/el6'
 RUN tar -xvf aerospike.tgz
 RUN rpm -ivh aerospike-server-community*/aerospike*.rpm
+
+COPY aerospike.conf /etc/aerospike/
 #--------------------------------------------------------------------------------
 
 EXPOSE 22 3000 3001 3002 3003

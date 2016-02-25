@@ -1,6 +1,8 @@
 FROM c7_core
 MAINTAINER Pavan Gupta <pavan.gupta@gslab.com>
 
+RUN yum install -y autoconf
+
 #------------------------------------------------------------------------------
 # Build PHP From Source
 #------------------------------------------------------------------------------
