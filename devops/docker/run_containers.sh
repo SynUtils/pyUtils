@@ -14,7 +14,7 @@ docker run -itdp 12273:22 u12_py273
 docker run -itdp 7275:22 c7_py275
 
 # Centos 6 
-docker run -itdp 7275:22 c6_py266
+docker run -itdp 6266:22 c6_py266
 
 
 
